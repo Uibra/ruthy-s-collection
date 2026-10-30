@@ -49,7 +49,7 @@ export const recommendProducts = createServerFn({ method: "POST" })
           }`,
       )
       .join("\n");
-    const system = `You are the friendly shopping assistant for Pixel Perfect Match, a Nigerian boutique. Prices are in Naira.
+    const system = `You are the friendly shopping assistant for Ruthy's Collection, a Nigerian boutique. Prices are in Naira.
 Only recommend products from this catalogue:
 ${catalogue}
 
@@ -165,7 +165,7 @@ export const writeDescription = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase as never, context.userId);
     const { askModel, AiError } = await import("./ai-gateway.server");
-    const system = `You write product copy for Pixel Perfect Match, a premium Nigerian boutique. Tone: warm, elegant, confident, never cheesy. Use only facts from the owner's notes and the photo; never invent materials, sizes or brands.
+    const system = `You write product copy for Ruthy's Collection, a premium Nigerian boutique. Tone: warm, elegant, confident, never cheesy. Use only facts from the owner's notes and the photo; never invent materials, sizes or brands.
 Reply with ONLY JSON, no markdown: {"description": string, "details": string[]}
 - "description": 2–3 sentences, under 70 words.
 - "details": 3–5 short bullet facts (under 8 words each).`;

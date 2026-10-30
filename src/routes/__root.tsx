@@ -81,14 +81,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Pixel Perfect Match — Modern essentials, curated for everyday style" },
+      { title: "Ruthy's Collection — Modern essentials, curated for everyday style" },
       {
         name: "description",
         content:
           "Curated essentials, accessories and everyday pieces selected for style, comfort and confidence across Nigeria.",
       },
-      { name: "author", content: "Pixel Perfect Match" },
-      { property: "og:title", content: "Pixel Perfect Match — Modern essentials, curated for everyday style" },
+      { name: "author", content: "Ruthy's Collection" },
+      { property: "og:title", content: "Ruthy's Collection — Modern essentials, curated for everyday style" },
       {
         property: "og:description",
         content: "Curated essentials, accessories and everyday pieces selected for style, comfort and confidence.",

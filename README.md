@@ -1,4 +1,4 @@
-# Pixel Perfect Match
+# Ruthy's Collection
 
 Custom storefront and commerce app for Ruthy's Collection.
 
