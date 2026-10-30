@@ -46,7 +46,7 @@ const orderInput = z.object({
 });
 
 export const createOrder = createServerFn({ method: "POST" })
-  .inputValidator((d) => orderInput.parse(d))
+  .validator((d) => orderInput.parse(d))
   .handler(async ({ data }) => {
     const { data: order, error } = await publicClient()
       .from("orders")
@@ -69,7 +69,7 @@ export const createOrder = createServerFn({ method: "POST" })
   });
 
 export const createMessage = createServerFn({ method: "POST" })
-  .inputValidator((d) => z.object({ name: z.string().trim().min(1).max(100), message: z.string().trim().min(1).max(1000) }).parse(d))
+  .validator((d) => z.object({ name: z.string().trim().min(1).max(100), message: z.string().trim().min(1).max(1000) }).parse(d))
   .handler(async ({ data }) => {
     const { error } = await publicClient().from("customer_messages").insert({ name: data.name, message: data.message });
     if (error) throw new Error("Could not save your message");
@@ -139,7 +139,7 @@ export const listOrders = createServerFn({ method: "GET" })
 
 export const setOrderStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ id: z.string().uuid(), status: statuses }).parse(d))
+  .validator((d) => z.object({ id: z.string().uuid(), status: statuses }).parse(d))
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase as never, context.userId);
     const { error } = await context.supabase.from("orders").update({ status: data.status }).eq("id", data.id);
@@ -170,7 +170,7 @@ export const listMessages = createServerFn({ method: "GET" })
 
 export const setMessageRead = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ id: z.string().uuid(), read: z.boolean() }).parse(d))
+  .validator((d) => z.object({ id: z.string().uuid(), read: z.boolean() }).parse(d))
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase as never, context.userId);
     const { error } = await context.supabase
@@ -212,7 +212,7 @@ export const listAdminUsers = createServerFn({ method: "GET" })
 
 export const updateAdminRole = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ userId: z.string(), isAdmin: z.boolean() }).parse(d))
+  .validator((d) => z.object({ userId: z.string(), isAdmin: z.boolean() }).parse(d))
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase as never, context.userId);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

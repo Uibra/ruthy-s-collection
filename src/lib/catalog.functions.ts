@@ -37,7 +37,7 @@ export const isSignupOpen = createServerFn({ method: "GET" }).handler(async () =
 });
 
 export const recommendProducts = createServerFn({ method: "POST" })
-  .inputValidator((d) => z.object({ query: z.string().trim().min(2).max(500) }).parse(d))
+  .validator((d) => z.object({ query: z.string().trim().min(2).max(500) }).parse(d))
   .handler(async ({ data }) => {
     const { askModel, AiError } = await import("./ai-gateway.server");
     const products = await fetchAll();
@@ -111,7 +111,7 @@ const productInput = z.object({
 
 export const saveProduct = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => productInput.parse(d))
+  .validator((d) => productInput.parse(d))
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase as never, context.userId);
     const row = {
@@ -142,7 +142,7 @@ export const saveProduct = createServerFn({ method: "POST" })
 
 export const deleteProduct = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ id: z.string() }).parse(d))
+  .validator((d) => z.object({ id: z.string() }).parse(d))
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase as never, context.userId);
     const { error } = await context.supabase.from("products").delete().eq("id", data.id);
@@ -152,7 +152,7 @@ export const deleteProduct = createServerFn({ method: "POST" })
 
 export const writeDescription = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         name: z.string().trim().min(1).max(200),
@@ -191,7 +191,7 @@ Reply with ONLY JSON, no markdown: {"description": string, "details": string[]}
 
 export const uploadProductImage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z.object({ fileName: z.string().max(200), contentType: z.string().regex(/^image\//), base64: z.string().max(14_000_000) }).parse(d),
   )
   .handler(async ({ data, context }) => {
