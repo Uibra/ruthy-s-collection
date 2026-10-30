@@ -9,7 +9,7 @@ export function Footer() {
     <footer className="surface-emerald mt-24">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
         <div>
-          <p className="font-display text-2xl">Ruthy's Collection</p>
+          <p className="font-display text-2xl">{shop.name}</p>
           <p className="mt-2 text-sm opacity-80">{shop.tagline}</p>
           <div className="mt-5 flex gap-3">
             <a href={shop.socials.instagram} aria-label="Instagram" className="grid h-9 w-9 place-items-center border border-primary-foreground/30">
@@ -71,7 +71,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-primary-foreground/15 px-4 py-5 text-center text-xs opacity-70">
-        © {new Date().getFullYear()} Ruthy's Collection. All rights reserved.
+        © {new Date().getFullYear()} {shop.name}. All rights reserved.
       </div>
     </footer>
   );

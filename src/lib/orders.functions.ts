@@ -180,3 +180,53 @@ export const setMessageRead = createServerFn({ method: "POST" })
     if (error) throw new Error("Could not update the message");
     return { ok: true as const };
   });
+
+export type AdminUser = {
+  id: string;
+  email: string | null;
+  name: string | null;
+  isAdmin: boolean;
+};
+
+export const listAdminUsers = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.supabase as never, context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rolesData, error: rolesError } = await supabaseAdmin.from("user_roles").select("user_id, role");
+    const { data: usersData, error: usersError } = await supabaseAdmin.auth.admin.listUsers();
+
+    if (rolesError || usersError) throw new Error("Could not load admin users");
+
+    const roleSet = new Set((rolesData ?? []).filter((row) => row.role === "admin").map((row) => row.user_id));
+
+    const users = (usersData?.users ?? []).map((user) => ({
+      id: user.id,
+      email: user.email ?? null,
+      name: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+      isAdmin: roleSet.has(user.id),
+    }));
+
+    return { users };
+  });
+
+export const updateAdminRole = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ userId: z.string(), isAdmin: z.boolean() }).parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase as never, context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    if (data.isAdmin) {
+      const { data: existing } = await supabaseAdmin.from("user_roles").select("id").eq("user_id", data.userId).eq("role", "admin").maybeSingle();
+      if (!existing) {
+        const { error } = await supabaseAdmin.from("user_roles").insert({ user_id: data.userId, role: "admin" });
+        if (error) throw new Error("Could not add admin access");
+      }
+    } else {
+      const { error } = await supabaseAdmin.from("user_roles").delete().eq("user_id", data.userId).eq("role", "admin");
+      if (error) throw new Error("Could not remove admin access");
+    }
+
+    return { ok: true as const };
+  });

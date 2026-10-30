@@ -125,7 +125,7 @@ function AdminDashboard() {
 
       {(lowStock > 0 || outOfStock > 0) && (
         <p className="mt-6 text-sm text-muted-foreground">
-          Stock check: {lowStock} running low, {outOfStock} sold out — <Link to="/admin/products" className="text-primary underline">open products</Link> to restock.
+          Stock check: {lowStock} running low, {outOfStock} sold out — <Link to="/admin/products" className="text-primary underline">open products</Link> to restock and manage updates.
         </p>
       )}
     </div>

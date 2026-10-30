@@ -48,6 +48,26 @@ function AdminLayout() {
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <div className="flex flex-wrap items-center gap-3 border-b border-border pb-4">
         <Link to="/admin" className="font-display text-2xl">Shop manager</Link>
+        <nav className="ml-4 flex flex-wrap items-center gap-2 text-sm">
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/admin">Overview</Link>
+          </Button>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/admin/products">Products</Link>
+          </Button>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/admin/orders">Orders</Link>
+          </Button>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/admin/messages">Messages</Link>
+          </Button>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/admin/settings">Settings</Link>
+          </Button>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/admin/team">Team</Link>
+          </Button>
+        </nav>
         <div className="ml-auto flex gap-2">
           <Button asChild variant="emerald" size="sm">
             <Link to="/admin/products/$id" params={{ id: "new" }}>Add product</Link>

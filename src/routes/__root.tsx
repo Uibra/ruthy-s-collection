@@ -10,7 +10,6 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { StoreProvider } from "@/lib/store";
 import { AnnouncementBar, Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -44,7 +43,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    console.error("Route error:", error);
   }, [error]);
 
   return (
@@ -82,17 +81,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Ruthy's Collection — Quality Finds, Just for You" },
+      { title: "Pixel Perfect Match — Modern essentials, curated for everyday style" },
       {
         name: "description",
         content:
-          "Perfumes, earrings and chains, waist beads, vintage scarves and bags — carefully selected and delivered across Nigeria.",
+          "Curated essentials, accessories and everyday pieces selected for style, comfort and confidence across Nigeria.",
       },
-      { name: "author", content: "Ruthy's Collection" },
-      { property: "og:title", content: "Ruthy's Collection — Quality Finds, Just for You" },
+      { name: "author", content: "Pixel Perfect Match" },
+      { property: "og:title", content: "Pixel Perfect Match — Modern essentials, curated for everyday style" },
       {
         property: "og:description",
-        content: "Perfumes, accessories, bags and more, carefully selected just for you.",
+        content: "Curated essentials, accessories and everyday pieces selected for style, comfort and confidence.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

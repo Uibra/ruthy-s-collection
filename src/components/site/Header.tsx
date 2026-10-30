@@ -4,6 +4,7 @@ import { Heart, Menu, Search, ShoppingBag, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { shop } from "@/lib/shop-config";
 import { useStore } from "@/lib/store";
 import { categories } from "@/lib/products";
 
@@ -48,9 +49,9 @@ export function Header() {
         </button>
 
         <Link to="/" className="mr-auto flex flex-col leading-none">
-          <span className="font-display text-xl sm:text-2xl">Ruthy's Collection</span>
+          <span className="font-display text-xl sm:text-2xl">{shop.name}</span>
           <span className="hidden text-[0.625rem] tracking-[0.22em] text-muted-foreground sm:block">
-            QUALITY FINDS, JUST FOR YOU
+            {shop.tagline.toUpperCase()}
           </span>
         </Link>
 

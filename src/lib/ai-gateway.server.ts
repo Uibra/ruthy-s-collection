@@ -1,29 +1,14 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { streamText, type ModelMessage } from "ai";
 
-const RUN_ID_HEADER = "X-Lovable-AIG-Run-ID";
-
-function createRunIdFetch() {
-  let runId: string | undefined;
-  return async (input: RequestInfo | URL, init?: RequestInit) => {
-    const headers = new Headers(init?.headers);
-    if (runId && !headers.has(RUN_ID_HEADER)) headers.set(RUN_ID_HEADER, runId);
-    const response = await fetch(input, { ...init, headers });
-    runId ??= response.headers.get(RUN_ID_HEADER)?.trim() || undefined;
-    return response;
-  };
-}
-
 /** Streams a Responses call and returns the final text. */
 export async function askModel(messages: ModelMessage[], system: string) {
-  const apiKey = process.env["LOVABLE_API_KEY"];
-  if (!apiKey) throw new AiError(500, "The assistant isn't set up yet.");
-  const provider = createOpenAI({
-    baseURL: "https://ai.gateway.lovable.dev/v1",
-    apiKey,
-    headers: { "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "vercel-ai-sdk" },
-    fetch: createRunIdFetch(),
-  });
+  const apiKey = process.env["OPENAI_API_KEY"];
+  if (!apiKey) {
+    throw new AiError(500, "The assistant isn't set up yet. Add OPENAI_API_KEY to your local .env file.");
+  }
+
+  const provider = createOpenAI({ apiKey });
   let failure: unknown;
   const result = streamText({
     model: provider.responses("openai/gpt-6-astra"),
@@ -33,22 +18,15 @@ export async function askModel(messages: ModelMessage[], system: string) {
     onError: ({ error }) => {
       failure = error;
     },
-    providerOptions: {
-      openai: {
-        forceReasoning: true,
-        reasoningEffort: "low",
-        reasoningSummary: "auto",
-        store: false,
-        include: ["reasoning.encrypted_content"],
-      },
-    },
   });
+
   let text = "";
   try {
     text = await result.text;
   } catch (e) {
     failure ??= e;
   }
+
   if (failure || !text) throw toAiError(failure);
   return text;
 }
