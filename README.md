@@ -30,3 +30,4 @@ Set up your local environment variables required by Supabase and AI features bef
 ## Notes
 
 This repository is your custom project. Keep your own branding, database, and deployment configuration aligned with your business rather than the Lovable-generated template.
+# ruthy-s-collection
