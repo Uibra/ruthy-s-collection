@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793009129707,
+      "tag": "0000_lock_signup_after_owner",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793335535403,
+      "tag": "0001_create_orders_and_messages",
+      "breakpoints": true
+    }
+  ]
+}
