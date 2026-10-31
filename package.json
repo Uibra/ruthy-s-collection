@@ -1,7 +1,7 @@
 {
   "name": "pixel-perfect-match",
   "private": true,
-  "description": "Custom storefront and commerce app for Ruthy's Collection",
+  "description": "Custom storefront and commerce app for Ruthys Collection",
   "engines": {
     "node": ">=22.12.0"
   },

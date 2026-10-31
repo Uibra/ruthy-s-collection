@@ -13,13 +13,13 @@ import { whatsappGeneral } from "@/lib/whatsapp";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Ruthy's Collection — Perfumes, Jewellery, Bags & More" },
+      { title: "Ruthys Collection — Perfumes, Jewellery, Bags & More" },
       {
         name: "description",
         content:
           "Discover your perfect find: quality perfumes, earrings and chains, waist beads, vintage scarves and bags. Order online or on WhatsApp.",
       },
-      { property: "og:title", content: "Ruthy's Collection — Quality Finds, Just for You" },
+      { property: "og:title", content: "Ruthys Collection — Quality Finds, Just for You" },
       {
         property: "og:description",
         content:
@@ -134,7 +134,7 @@ function Home() {
       <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6">
         <div className="text-center">
           <p className="eyebrow text-muted-foreground">@ruthyscollection</p>
-          <h2 className="mt-3 font-display text-3xl">Follow Ruthy's Collection</h2>
+          <h2 className="mt-3 font-display text-3xl">Follow Ruthys Collection</h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
             New pieces, restocks and styling ideas — shared first on our socials.
           </p>

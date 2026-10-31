@@ -1,5 +1,5 @@
 export const defaultShop = {
-  name: "Ruthy's Collection",
+  name: "Ruthys Collection",
   tagline: "Modern essentials, curated for everyday style",
   phoneLocal: "+234 800 000 0000",
   whatsappNumber: "2348000000000",

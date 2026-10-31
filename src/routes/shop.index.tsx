@@ -26,16 +26,16 @@ export const Route = createFileRoute("/shop/")({
   },
   head: () => ({
     meta: [
-      { title: "Shop All — Ruthy's Collection" },
+      { title: "Shop All — Ruthys Collection" },
       {
         name: "description",
         content:
           "Browse perfumes, earrings and chains, waist beads, vintage scarves and bags. Filter by category, price and availability.",
       },
-      { property: "og:title", content: "Shop All — Ruthy's Collection" },
+      { property: "og:title", content: "Shop All — Ruthys Collection" },
       {
         property: "og:description",
-        content: "Search, filter and sort the full Ruthy's Collection catalogue.",
+        content: "Search, filter and sort the full Ruthys Collection catalogue.",
       },
     ],
   }),

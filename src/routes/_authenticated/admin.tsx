@@ -9,10 +9,10 @@ import { checkAdmin } from "@/lib/catalog.functions";
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
-      { title: "Admin — Ruthy's Collection" },
+      { title: "Admin — Ruthys Collection" },
       { name: "description", content: "Manage products, prices, stock and photos." },
-      { property: "og:title", content: "Admin — Ruthy's Collection" },
-      { property: "og:description", content: "Manage the Ruthy's Collection catalogue." },
+      { property: "og:title", content: "Admin — Ruthys Collection" },
+      { property: "og:description", content: "Manage the Ruthys Collection catalogue." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },

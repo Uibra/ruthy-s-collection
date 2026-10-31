@@ -11,7 +11,7 @@ import { shop } from "@/lib/shop-config";
 import { whatsappGeneral } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/contact")({
-  head: () => seo("Contact Ruthy's Collection", "Reach Ruthy's Collection on WhatsApp, phone or email. Based in Kano, delivering across Nigeria."),
+  head: () => seo("Contact Ruthys Collection", "Reach Ruthys Collection on WhatsApp, phone or email. Based in Kano, delivering across Nigeria."),
   component: Contact,
 });
 

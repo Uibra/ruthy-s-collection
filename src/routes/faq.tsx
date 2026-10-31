@@ -5,7 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { formatNaira, shop } from "@/lib/shop-config";
 
 export const Route = createFileRoute("/faq")({
-  head: () => seo("FAQ — Ruthy's Collection", "Answers about ordering, delivery, payment, returns and product care at Ruthy's Collection."),
+  head: () => seo("FAQ — Ruthys Collection", "Answers about ordering, delivery, payment, returns and product care at Ruthys Collection."),
   component: Faq,
 });
 

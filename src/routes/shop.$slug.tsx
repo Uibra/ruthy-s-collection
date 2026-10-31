@@ -23,11 +23,11 @@ export const Route = createFileRoute("/shop/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Product not found — Ruthy's Collection" }, { name: "robots", content: "noindex" }],
+        meta: [{ title: "Product not found — Ruthys Collection" }, { name: "robots", content: "noindex" }],
       };
     }
     const { product } = loaderData;
-    const title = `${product.name} — Ruthy's Collection`;
+    const title = `${product.name} — Ruthys Collection`;
     return {
       meta: [
         { title },

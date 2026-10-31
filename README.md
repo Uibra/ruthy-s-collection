@@ -1,6 +1,6 @@
-# Ruthy's Collection
+# Ruthys Collection
 
-Custom storefront and commerce app for Ruthy's Collection.
+Custom storefront and commerce app for Ruthys Collection.
 
 This project was originally generated from a Lovable starter, but it is now being adapted as a custom-owned codebase for the business.
 

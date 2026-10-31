@@ -9,8 +9,8 @@ import { shop } from "@/lib/shop-config";
 export const Route = createFileRoute("/about")({
   head: () =>
     seo(
-      "About Ruthy's Collection — Founded by Ruth Friday",
-      "Meet Ruth Friday, CEO and founder of Ruthy's Collection — a Kano boutique for quality perfumes, jewellery, waist beads, scarves and bags.",
+      "About Ruthys Collection — Founded by Ruth Friday",
+      "Meet Ruth Friday, CEO and founder of Ruthys Collection — a Kano boutique for quality perfumes, jewellery, waist beads, scarves and bags.",
     ),
   component: About,
 });
@@ -29,7 +29,7 @@ function About() {
           <div className="absolute -right-4 -top-4 h-full w-full border border-gold/50" />
           <img
             src={ruth.url}
-            alt="Ruth Friday, CEO and founder of Ruthy's Collection"
+            alt="Ruth Friday, CEO and founder of Ruthys Collection"
             width={1020}
             height={1280}
             className="relative aspect-[4/5] w-full object-cover shadow-lift"

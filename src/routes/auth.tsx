@@ -13,9 +13,9 @@ import { isSignupOpen } from "@/lib/catalog.functions";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Admin Sign In — Ruthy's Collection" },
-      { name: "description", content: "Private sign-in for the Ruthy's Collection shop owner." },
-      { property: "og:title", content: "Admin Sign In — Ruthy's Collection" },
+      { title: "Admin Sign In — Ruthys Collection" },
+      { name: "description", content: "Private sign-in for the Ruthys Collection shop owner." },
+      { property: "og:title", content: "Admin Sign In — Ruthys Collection" },
       { property: "og:description", content: "Private sign-in for the shop owner." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

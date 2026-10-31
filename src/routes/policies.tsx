@@ -4,7 +4,7 @@ import { PageIntro, seo } from "@/components/site/PageIntro";
 import { formatNaira, shop } from "@/lib/shop-config";
 
 export const Route = createFileRoute("/policies")({
-  head: () => seo("Shipping, Returns & Privacy — Ruthy's Collection", "Delivery, returns, exchanges and privacy policies for Ruthy's Collection."),
+  head: () => seo("Shipping, Returns & Privacy — Ruthys Collection", "Delivery, returns, exchanges and privacy policies for Ruthys Collection."),
   component: Policies,
 });
 

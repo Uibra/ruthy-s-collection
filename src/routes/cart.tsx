@@ -10,9 +10,9 @@ import { whatsappCart } from "@/lib/whatsapp";
 export const Route = createFileRoute("/cart")({
   head: () => ({
     meta: [
-      { title: "Your Cart — Ruthy's Collection" },
+      { title: "Your Cart — Ruthys Collection" },
       { name: "description", content: "Review your selected items before checkout." },
-      { property: "og:title", content: "Your Cart — Ruthy's Collection" },
+      { property: "og:title", content: "Your Cart — Ruthys Collection" },
       { property: "og:description", content: "Review your items, then checkout or order on WhatsApp." },
       { name: "robots", content: "noindex" },
     ],

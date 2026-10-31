@@ -12,7 +12,7 @@ import { whatsappCart } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/checkout")({
   head: () => {
-    const h = seo("Checkout — Ruthy's Collection", "Confirm your delivery details and send your order to Ruthy's Collection.");
+    const h = seo("Checkout — Ruthys Collection", "Confirm your delivery details and send your order to Ruthys Collection.");
     return { meta: [...h.meta, { name: "robots", content: "noindex" }] };
   },
   component: Checkout,

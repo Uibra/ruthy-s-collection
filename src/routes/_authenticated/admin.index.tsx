@@ -15,9 +15,9 @@ import type { AdminOrder, AdminMessage } from "@/lib/orders.functions";
 export const Route = createFileRoute("/_authenticated/admin/")({
   head: () => ({
     meta: [
-      { title: "Shop manager — Ruthy's Collection" },
+      { title: "Shop manager — Ruthys Collection" },
       { name: "description", content: "Sales, orders and customer messages at a glance." },
-      { property: "og:title", content: "Shop manager — Ruthy's Collection" },
+      { property: "og:title", content: "Shop manager — Ruthys Collection" },
       { property: "og:description", content: "Track sales, orders and customer messages." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
