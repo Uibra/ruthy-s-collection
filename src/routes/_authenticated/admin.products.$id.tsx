@@ -85,9 +85,9 @@ function Editor() {
       details: existing.details.join("\n"),
       options: (existing.options ?? []).map((o) => `${o.label}: ${o.values.join(", ")}`).join("\n"),
       images: existing.images,
-      featured: existing.featured,
-      bestSeller: existing.bestSeller,
-      newArrival: existing.newArrival,
+      featured: Boolean(existing.featured),
+      bestSeller: Boolean(existing.bestSeller),
+      newArrival: Boolean(existing.newArrival),
       rating: existing.rating,
       reviews: existing.reviews,
     });
@@ -127,14 +127,20 @@ function Editor() {
     set("images", imgs);
   }
 
-  async function aiWrite() {
-    if (!f.name.trim()) return toast.error("Add a product name first");
+  async function aiWrite(): Promise<void> {
+    if (!f.name.trim()) {
+      toast.error("Add a product name first");
+      return;
+    }
     setBusy("ai");
     try {
       const r = await describe({
         data: { name: f.name, category: f.category, notes: `${f.details}\n${f.description}`.trim(), imageUrl: f.images[0] ?? null },
       });
-      if (!r.ok) return toast.error(r.error);
+      if (!r.ok) {
+        toast.error(r.error);
+        return;
+      }
       setF((x) => ({ ...x, description: r.description, details: r.details.length ? r.details.join("\n") : x.details }));
       toast.success("Description written — review and save");
     } finally {
@@ -173,6 +179,40 @@ function Editor() {
           options,
           images: f.images,
         },
+      });
+      qc.setQueryData(["products"], (current: unknown) => {
+        const list = Array.isArray(current) ? [...current] : [];
+        const item = {
+          id: res.id,
+          slug: f.slug.trim() || slugify(f.name),
+          name: f.name,
+          category: f.category,
+          price: Math.round(Number(f.price) || 0),
+          comparePrice: f.comparePrice ? Math.round(Number(f.comparePrice)) : undefined,
+          stock: Math.max(0, Math.round(Number(f.stock) || 0)),
+          rating: f.rating,
+          reviews: f.reviews,
+          addedAt: new Date().toISOString(),
+          featured: f.featured,
+          bestSeller: f.bestSeller,
+          newArrival: f.newArrival,
+          description: f.description,
+          details: f.details.split("\n").map((s) => s.trim()).filter(Boolean),
+          options: (f.options
+            .split("\n")
+            .map((l) => l.split(":"))
+            .filter((p) => p.length >= 2 && p[0]!.trim())
+            .map(([label, rest]) => ({
+              label: label!.trim(),
+              values: rest!.split(",").map((v) => v.trim()).filter(Boolean),
+            }))),
+          images: f.images,
+        };
+
+        const index = list.findIndex((product: any) => product.id === res.id);
+        if (index >= 0) list[index] = item;
+        else list.unshift(item);
+        return list;
       });
       await qc.invalidateQueries({ queryKey: ["products"] });
       toast.success("Saved — live on the shop now");

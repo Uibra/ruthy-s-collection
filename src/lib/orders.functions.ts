@@ -204,12 +204,21 @@ export const listAdminUsers = createServerFn({ method: "GET" })
 
     const roleSet = new Set((rolesData ?? []).filter((row) => row.role === "admin").map((row) => row.user_id));
 
-    const users = (usersData?.users ?? []).map((user) => ({
-      id: user.id,
-      email: user.email ?? null,
-      name: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
-      isAdmin: roleSet.has(user.id),
-    }));
+    const users = (usersData?.users ?? []).map((user) => {
+      const metadata = (user.user_metadata ?? {}) as Record<string, unknown>;
+      const name = typeof metadata["full_name"] === "string"
+        ? metadata["full_name"]
+        : typeof metadata["name"] === "string"
+          ? metadata["name"]
+          : null;
+
+      return {
+        id: user.id,
+        email: user.email ?? null,
+        name,
+        isAdmin: roleSet.has(user.id),
+      };
+    });
 
     return { users };
   });

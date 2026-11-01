@@ -7,7 +7,7 @@ import { PageIntro, seo } from "@/components/site/PageIntro";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { shop } from "@/lib/shop-config";
+import { useShopSettings } from "@/lib/shop-config";
 import { whatsappGeneral } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/contact")({
@@ -21,6 +21,7 @@ const schema = z.object({
 });
 
 function Contact() {
+  const shop = useShopSettings();
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");

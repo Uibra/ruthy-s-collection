@@ -3,7 +3,7 @@ import { MessageCircle, Minus, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ProductImage } from "@/components/shop/ProductImage";
-import { formatNaira, shop } from "@/lib/shop-config";
+import { formatNaira, useShopSettings } from "@/lib/shop-config";
 import { useStore } from "@/lib/store";
 import { whatsappCart } from "@/lib/whatsapp";
 
@@ -21,6 +21,7 @@ export const Route = createFileRoute("/cart")({
 });
 
 function CartPage() {
+  const shop = useShopSettings();
   const { detailedCart, setQuantity, removeLine, subtotal, hydrated } = useStore();
   const delivery = subtotal >= shop.delivery.freeOver || subtotal === 0 ? 0 : shop.delivery.homeFee;
 

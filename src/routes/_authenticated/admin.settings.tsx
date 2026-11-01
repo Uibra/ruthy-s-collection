@@ -7,13 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
-import { shop, updateShopSettings } from "@/lib/shop-config";
+import { updateShopSettings, useShopSettings } from "@/lib/shop-config";
 
 export const Route = createFileRoute("/_authenticated/admin/settings")({
   component: StoreSettingsPage,
 });
 
 function StoreSettingsPage() {
+  const shop = useShopSettings();
   const [form, setForm] = useState({ ...shop, socials: { ...shop.socials }, delivery: { ...shop.delivery } });
   const [saved, setSaved] = useState<string | null>(null);
   const [email, setEmail] = useState("");
@@ -43,6 +44,10 @@ function StoreSettingsPage() {
   function setField<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
+
+  useEffect(() => {
+    setForm({ ...shop, socials: { ...shop.socials }, delivery: { ...shop.delivery } });
+  }, [shop]);
 
   function save() {
     updateShopSettings(form as any);

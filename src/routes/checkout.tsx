@@ -6,7 +6,7 @@ import { seo } from "@/components/site/PageIntro";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { formatNaira, shop } from "@/lib/shop-config";
+import { formatNaira, useShopSettings } from "@/lib/shop-config";
 import { useStore } from "@/lib/store";
 import { whatsappCart } from "@/lib/whatsapp";
 
@@ -26,6 +26,7 @@ const schema = z.object({
 });
 
 function Checkout() {
+  const shop = useShopSettings();
   const { detailedCart, subtotal, clearCart, hydrated } = useStore();
   const [method, setMethod] = useState<"home" | "pickup">("home");
   const [form, setForm] = useState({ name: "", phone: "", address: "", notes: "" });

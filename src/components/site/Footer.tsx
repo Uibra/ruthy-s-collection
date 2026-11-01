@@ -1,10 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Mail, MapPin, Music2, Phone } from "lucide-react";
 
-import { shop } from "@/lib/shop-config";
+import { useShopSettings } from "@/lib/shop-config";
 import { categories } from "@/lib/products";
 
 export function Footer() {
+  const shop = useShopSettings();
   return (
     <footer className="surface-emerald mt-24">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">

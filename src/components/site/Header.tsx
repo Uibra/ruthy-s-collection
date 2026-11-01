@@ -4,7 +4,7 @@ import { Heart, Menu, Search, ShoppingBag, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { shop } from "@/lib/shop-config";
+import { useShopSettings } from "@/lib/shop-config";
 import { useStore } from "@/lib/store";
 import { categories } from "@/lib/products";
 
@@ -26,6 +26,7 @@ export function AnnouncementBar() {
 
 export function Header() {
   const { cartCount, wishlist } = useStore();
+  const shop = useShopSettings();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const navigate = useNavigate();

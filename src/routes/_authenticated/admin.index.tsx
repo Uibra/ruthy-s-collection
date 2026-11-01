@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
-import { Package, TrendingUp, Wallet, MessageCircle } from "lucide-react";
+import { Package, TrendingUp, Wallet, MessageCircle, type LucideIcon } from "lucide-react";
 
 import { seo } from "@/components/site/PageIntro";
 import { Button } from "@/components/ui/button";
@@ -48,7 +48,7 @@ function AdminDashboard() {
   const lowStock = products.filter((p) => p.stock > 0 && p.stock <= 5).length;
   const outOfStock = products.filter((p) => p.stock <= 0).length;
 
-  const stats: [string, string, string, string][] = [
+  const stats: [string, string, LucideIcon, string][] = [
     ["Total sales", revenue ? formatNaira(revenue) : "—", Wallet, `${live.length} order${live.length === 1 ? "" : "s"}`],
     ["Average order", avg ? formatNaira(avg) : "—", TrendingUp, "per order"],
     ["New orders", String(newOrders), Package, "waiting on you"],

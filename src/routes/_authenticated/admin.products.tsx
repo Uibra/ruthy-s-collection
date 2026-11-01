@@ -19,6 +19,10 @@ function AdminProductsPage() {
   async function handleDelete(id: string, name: string) {
     if (!confirm(`Delete "${name}"? This can't be undone.`)) return;
     await remove({ data: { id } });
+    qc.setQueryData(["products"], (current: unknown) => {
+      if (!Array.isArray(current)) return current;
+      return current.filter((product: any) => product.id !== id);
+    });
     await qc.invalidateQueries({ queryKey: ["products"] });
   }
 
@@ -34,8 +38,19 @@ function AdminProductsPage() {
         </Button>
       </div>
 
-      <div className="grid gap-4">
-        {products.map((product) => (
+      {products.length === 0 ? (
+        <div className="border border-dashed border-border bg-card p-10 text-center">
+          <p className="font-display text-2xl">No products yet</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Your shop is live, but the product table is empty. Add the first real item to start selling.
+          </p>
+          <Button asChild variant="emerald" className="mt-5">
+            <Link to="/admin/products/$id" params={{ id: "new" }}>Create your first product</Link>
+          </Button>
+        </div>
+      ) : (
+        <div className="grid gap-4">
+          {products.map((product) => (
           <div key={product.id} className="flex flex-col gap-4 border border-border bg-card p-4 md:flex-row md:items-center">
             <div className="h-20 w-20 overflow-hidden rounded-md border border-border bg-muted/40">
               {product.images?.[0] ? (
@@ -67,8 +82,9 @@ function AdminProductsPage() {
               </Button>
             </div>
           </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

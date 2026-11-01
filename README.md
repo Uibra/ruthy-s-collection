@@ -27,6 +27,21 @@ npm run dev -- --host 0.0.0.0
 
 Set up your local environment variables required by Supabase and AI features before running the app.
 
+## Owner setup and first real products
+
+1. Create the first owner account from the app at `/auth`.
+2. Sign in and open `/admin`.
+3. Add the real products you want to sell from the admin product screen.
+4. If you want to seed the first catalogue immediately, run:
+
+```sh
+cp .env.example .env.local
+# add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to .env.local
+npm run seed:products
+```
+
+The seed script uses the service role key to insert live product rows into Supabase and upserts by `slug`, so rerunning it safely refreshes the same catalogue.
+
 ## Notes
 
 This repository is your custom project. Keep your own branding, database, and deployment configuration aligned with your business rather than the Lovable-generated template.

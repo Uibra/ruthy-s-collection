@@ -7,7 +7,7 @@ import { ProductCard } from "@/components/shop/ProductCard";
 import { FindAssistant } from "@/components/shop/FindAssistant";
 import { categories, type Product } from "@/lib/products";
 import { useProducts } from "@/lib/catalog";
-import { shop } from "@/lib/shop-config";
+import { useShopSettings } from "@/lib/shop-config";
 import { whatsappGeneral } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/")({
@@ -31,6 +31,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const shop = useShopSettings();
   const products = useProducts();
   const featured = products.filter((p) => p.featured).slice(0, 4);
   const newArrivals = products.filter((p) => p.newArrival).slice(0, 4);

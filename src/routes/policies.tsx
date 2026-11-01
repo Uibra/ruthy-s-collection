@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { PageIntro, seo } from "@/components/site/PageIntro";
-import { formatNaira, shop } from "@/lib/shop-config";
+import { formatNaira, useShopSettings } from "@/lib/shop-config";
 
 export const Route = createFileRoute("/policies")({
   head: () => seo("Shipping, Returns & Privacy — Ruthys Collection", "Delivery, returns, exchanges and privacy policies for Ruthys Collection."),
@@ -9,6 +9,7 @@ export const Route = createFileRoute("/policies")({
 });
 
 function Policies() {
+  const shop = useShopSettings();
   const sections = [
     { title: "Shipping", body: `We deliver across Nigeria. Home delivery costs ${formatNaira(shop.delivery.homeFee)}; pickup in ${shop.location} is free. Orders over ${formatNaira(shop.delivery.freeOver)} ship free. Orders are dispatched once payment is confirmed.` },
     { title: "Returns & exchanges", body: "Unused items in their original packaging may be exchanged within 3 days of delivery. For hygiene reasons, opened perfumes and waist beads cannot be returned. Contact us on WhatsApp to arrange an exchange." },

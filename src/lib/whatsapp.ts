@@ -1,7 +1,12 @@
-import { formatNaira, shop } from "./shop-config";
+import { formatNaira, readShopSettings } from "./shop-config";
 import type { Product } from "./products";
 
+function currentShop() {
+  return readShopSettings();
+}
+
 function link(message: string) {
+  const shop = currentShop();
   return `https://wa.me/${shop.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
@@ -13,6 +18,7 @@ function optionText(options?: Record<string, string>, separator = "\n") {
 }
 
 export function whatsappGeneral(message?: string) {
+  const shop = currentShop();
   return link(message ?? `Hello ${shop.name}, I have a question about your products.`);
 }
 
@@ -21,6 +27,7 @@ export function whatsappProduct(
   quantity = 1,
   options?: Record<string, string>,
 ) {
+  const shop = currentShop();
   return link(
     [
       `Hello ${shop.name}, I would like to order:`,
@@ -40,6 +47,7 @@ export function whatsappCart(
   total: number,
   extra?: string,
 ) {
+  const shop = currentShop();
   const body = lines.map((l) => {
     const extras = optionText(l.options, ", ");
     return `• ${l.quantity} × ${l.name}${extras ? ` (${extras})` : ""} — ${formatNaira(

@@ -3,6 +3,7 @@ import {
   Outlet,
   Link,
   createRootRouteWithContext,
+  useLocation,
   useRouter,
   HeadContent,
   Scripts,
@@ -39,12 +40,13 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
+function ErrorComponent({ error, reset }: { error: unknown; reset: () => void }) {
   const router = useRouter();
+  const err = error instanceof Error ? error : new Error(String(error));
+  console.error(err);
   useEffect(() => {
-    console.error("Route error:", error);
-  }, [error]);
+    console.error("Route error:", err);
+  }, [err]);
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-4">
@@ -129,18 +131,20 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin") || location.pathname.startsWith("/auth");
 
   return (
     <QueryClientProvider client={queryClient}>
       <StoreProvider>
-        <AnnouncementBar />
-        <Header />
+        {!isAdminRoute && <AnnouncementBar />}
+        {!isAdminRoute && <Header />}
         <main className="min-h-[60vh]">
           {/* Required: nested routes render here. */}
           <Outlet />
         </main>
-        <Footer />
-        <WhatsAppButton />
+        {!isAdminRoute && <Footer />}
+        {!isAdminRoute && <WhatsAppButton />}
         <Toaster />
       </StoreProvider>
     </QueryClientProvider>

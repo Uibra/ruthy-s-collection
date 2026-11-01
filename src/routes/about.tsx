@@ -4,7 +4,7 @@ import { Gem, HeartHandshake, Truck } from "lucide-react";
 import ruth from "@/assets/ruth-friday.jpg";
 import { seo } from "@/components/site/PageIntro";
 import { Button } from "@/components/ui/button";
-import { shop } from "@/lib/shop-config";
+import { useShopSettings } from "@/lib/shop-config";
 
 export const Route = createFileRoute("/about")({
   head: () =>
@@ -22,6 +22,7 @@ const values = [
 ];
 
 function About() {
+  const shop = useShopSettings();
   return (
     <div>
       <section className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[5fr_6fr] lg:py-20">
