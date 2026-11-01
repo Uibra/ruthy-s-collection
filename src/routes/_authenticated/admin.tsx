@@ -1,10 +1,11 @@
-import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Navigate, Outlet, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { checkAdmin } from "@/lib/catalog.functions";
+import { resolveAdminAccess } from "@/lib/admin-auth";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -23,19 +24,40 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 function AdminLayout() {
   const check = useServerFn(checkAdmin);
-  const { data, isLoading } = useQuery({ queryKey: ["is-admin"], queryFn: () => check() });
+  const { data: sessionData, isLoading: isSessionLoading, error: sessionError } = useQuery({
+    queryKey: ["supabase-session"],
+    queryFn: async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) throw error;
+      return data;
+    },
+    staleTime: Infinity,
+    retry: false,
+  });
+  const isAuthenticated = Boolean(sessionData?.session);
+  const { data, isLoading } = useQuery({
+    queryKey: ["is-admin"],
+    queryFn: () => check(),
+    enabled: isAuthenticated,
+  });
+  const access = resolveAdminAccess({ isAuthenticated, isAdmin: data?.isAdmin });
   const qc = useQueryClient();
   const navigate = useNavigate();
+
+  if (sessionError) return <Navigate to="/auth" replace />;
+  if (!isSessionLoading && !isAuthenticated) return <Navigate to="/auth" replace />;
 
   async function signOut() {
     await qc.cancelQueries();
     qc.removeQueries({ queryKey: ["is-admin"] });
+    qc.removeQueries({ queryKey: ["supabase-session"] });
     await supabase.auth.signOut();
     navigate({ to: "/auth", replace: true });
   }
 
-  if (isLoading) return <p className="p-10 text-center text-sm text-muted-foreground">Checking access…</p>;
-  if (!data?.isAdmin)
+  if (isSessionLoading || (isAuthenticated && isLoading)) return <p className="p-10 text-center text-sm text-muted-foreground">Checking access…</p>;
+  if (access.shouldRedirect) return <Navigate to="/auth" replace />;
+  if (data?.isAdmin === false)
     return (
       <div className="mx-auto max-w-md px-4 py-16 text-center">
         <h1 className="font-display text-3xl">Owner access only</h1>

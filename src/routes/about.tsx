@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Gem, HeartHandshake, Truck } from "lucide-react";
 
-import ruth from "@/assets/ruth-friday.jpg.asset.json";
+import ruth from "@/assets/ruth-friday.jpg";
 import { seo } from "@/components/site/PageIntro";
 import { Button } from "@/components/ui/button";
 import { shop } from "@/lib/shop-config";
@@ -28,7 +28,7 @@ function About() {
         <figure className="fade-rise relative mx-auto w-full max-w-md">
           <div className="absolute -right-4 -top-4 h-full w-full border border-gold/50" />
           <img
-            src={ruth.url}
+            src={ruth}
             alt="Ruth Friday, CEO and founder of Ruthys Collection"
             width={1020}
             height={1280}

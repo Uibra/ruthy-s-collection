@@ -7,8 +7,12 @@ import type { Database } from "@/integrations/supabase/types";
 import { rowToProduct, type ProductRow } from "./catalog-shared";
 
 function publicClient() {
-  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-  return createClient<Database>(process.env["SUPABASE_URL"]!, key, {
+  const url = process.env["SUPABASE_URL"] ?? process.env["VITE_SUPABASE_URL"];
+  const key = process.env["SUPABASE_PUBLISHABLE_KEY"] ?? process.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
+  if (!url || !key) {
+    throw new Error("Missing Supabase environment variables: set SUPABASE_URL/SUPABASE_PUBLISHABLE_KEY or VITE_SUPABASE_URL/VITE_SUPABASE_PUBLISHABLE_KEY");
+  }
+  return createClient<Database>(url, key, {
     auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
     global: {
       // Opaque sb_ keys aren't JWTs; send only apikey, not the default Authorization bearer.
