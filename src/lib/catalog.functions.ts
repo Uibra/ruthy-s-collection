@@ -81,17 +81,28 @@ Reply with ONLY JSON, no markdown: {"message": string, "picks": [{"id": string, 
 
 // ---------- Admin ----------
 
+export async function ensureAdminAccess(
+  supabase: {
+    rpc: (fn: "has_role" | "claim_first_admin", args?: { _user_id?: string; _role?: "admin" }) => PromiseLike<{ data: unknown }>;
+  },
+  userId: string,
+) {
+  const { data: hasRole } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
+  if (hasRole) return true;
+
+  const { data, error } = await supabase.rpc("claim_first_admin");
+  if (error) throw new Error("Could not check access");
+  return Boolean(data);
+}
+
 export const checkAdmin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase.rpc("claim_first_admin");
-    if (error) throw new Error("Could not check access");
-    return { isAdmin: Boolean(data) };
+    return { isAdmin: await ensureAdminAccess(context.supabase as never, context.userId) };
   });
 
-async function assertAdmin(supabase: { rpc: (fn: "has_role", args: { _user_id: string; _role: "admin" }) => PromiseLike<{ data: unknown }> }, userId: string) {
-  const { data } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
-  if (!data) throw new Error("Admins only");
+async function assertAdmin(supabase: { rpc: (fn: "has_role" | "claim_first_admin", args?: { _user_id?: string; _role?: "admin" }) => PromiseLike<{ data: unknown }> }, userId: string) {
+  if (!(await ensureAdminAccess(supabase, userId))) throw new Error("Admins only");
 }
 
 const productInput = z.object({
