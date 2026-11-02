@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 
@@ -12,9 +12,14 @@ export const Route = createFileRoute("/_authenticated/admin/products")({
 });
 
 function AdminProductsPage() {
+  const location = useLocation();
   const products = useProducts();
   const qc = useQueryClient();
   const remove = useServerFn(deleteProduct);
+  const navigate = useNavigate();
+
+  const isChildRoute = location.pathname !== "/admin/products" && location.pathname !== "/admin/products/";
+  if (isChildRoute) return <Outlet />;
 
   async function handleDelete(id: string, name: string) {
     if (!confirm(`Delete "${name}"? This can't be undone.`)) return;
@@ -33,8 +38,8 @@ function AdminProductsPage() {
           <p className="eyebrow text-muted-foreground">Catalog</p>
           <h1 className="font-display text-3xl">Products</h1>
         </div>
-        <Button asChild variant="emerald">
-          <Link to="/admin/products/$id" params={{ id: "new" }}>Add product</Link>
+        <Button variant="emerald" onClick={() => navigate({ to: "/admin/products/$id", params: { id: "new" } })}>
+          Add product
         </Button>
       </div>
 
@@ -44,8 +49,8 @@ function AdminProductsPage() {
           <p className="mt-2 text-sm text-muted-foreground">
             Your shop is live, but the product table is empty. Add the first real item to start selling.
           </p>
-          <Button asChild variant="emerald" className="mt-5">
-            <Link to="/admin/products/$id" params={{ id: "new" }}>Create your first product</Link>
+          <Button variant="emerald" className="mt-5" onClick={() => navigate({ to: "/admin/products/$id", params: { id: "new" } })}>
+            Create your first product
           </Button>
         </div>
       ) : (
@@ -74,8 +79,8 @@ function AdminProductsPage() {
             </div>
 
             <div className="flex flex-wrap gap-2 md:ml-auto">
-              <Button asChild variant="outline" size="sm">
-                <Link to="/admin/products/$id" params={{ id: product.id }}>Edit</Link>
+              <Button variant="outline" size="sm" onClick={() => navigate({ to: "/admin/products/$id", params: { id: product.id } })}>
+                Edit
               </Button>
               <Button variant="destructive" size="sm" onClick={() => handleDelete(product.id, product.name)}>
                 Delete

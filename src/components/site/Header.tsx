@@ -95,6 +95,10 @@ export function Header() {
           <ShoppingBag className="h-5 w-5" />
           {cartCount > 0 && <Dot>{cartCount}</Dot>}
         </Link>
+
+        <Button asChild variant="outline" size="sm" className="hidden h-9 px-3 text-xs md:inline-flex">
+          <Link to="/auth">Owner sign in</Link>
+        </Button>
       </div>
 
       {open && (

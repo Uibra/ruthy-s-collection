@@ -1,10 +1,11 @@
 import { createFileRoute, Link, Navigate, Outlet, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { checkAdmin } from "@/lib/catalog.functions";
+import { checkAdmin, claimOwnerAdmin } from "@/lib/catalog.functions";
 import { resolveAdminAccess } from "@/lib/admin-auth";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 function AdminLayout() {
   const check = useServerFn(checkAdmin);
+  const claim = useServerFn(claimOwnerAdmin);
   const { data: sessionData, isLoading: isSessionLoading, error: sessionError } = useQuery({
     queryKey: ["supabase-session"],
     queryFn: async () => {
@@ -44,6 +46,15 @@ function AdminLayout() {
   const qc = useQueryClient();
   const navigate = useNavigate();
 
+  async function grantAccess() {
+    const result = await claim();
+    if (result.ok) {
+      await qc.invalidateQueries({ queryKey: ["is-admin"] });
+      return;
+    }
+    throw new Error("Could not claim admin access");
+  }
+
   if (sessionError) return <Navigate to="/auth" replace />;
   if (!isSessionLoading && !isAuthenticated) return <Navigate to="/auth" replace />;
 
@@ -61,14 +72,30 @@ function AdminLayout() {
     return (
       <div className="mx-auto max-w-md px-4 py-16 text-center">
         <h1 className="font-display text-3xl">Owner access only</h1>
-        <p className="mt-2 text-sm text-muted-foreground">This account can't edit the shop.</p>
-        <Button variant="emerald" className="mt-6" onClick={signOut}>Sign out</Button>
+        <p className="mt-2 text-sm text-muted-foreground">Claim the admin role for this account to manage products and site changes.</p>
+        <div className="mt-6 flex justify-center gap-3">
+          <Button variant="emerald" onClick={() => void grantAccess().then(() => window.location.reload())}>Claim admin access</Button>
+          <Button variant="outline" onClick={signOut}>Sign out</Button>
+        </div>
       </div>
     );
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <div className="flex flex-wrap items-center gap-3 border-b border-border pb-4">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 rounded-full"
+          aria-label="Go back"
+          onClick={() => {
+            if (typeof window !== "undefined" && window.history.length > 1) window.history.back();
+            else navigate({ to: "/" });
+          }}
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
         <Link to="/admin" className="font-display text-2xl">Shop manager</Link>
         <nav className="ml-4 flex flex-wrap items-center gap-2 text-sm">
           <Button asChild variant="ghost" size="sm">
@@ -91,8 +118,8 @@ function AdminLayout() {
           </Button>
         </nav>
         <div className="ml-auto flex gap-2">
-          <Button asChild variant="emerald" size="sm">
-            <Link to="/admin/products/$id" params={{ id: "new" }}>Add product</Link>
+          <Button variant="emerald" size="sm" onClick={() => navigate({ to: "/admin/products/$id", params: { id: "new" } })}>
+            Add product
           </Button>
           <Button variant="outline" size="sm" onClick={signOut}>Sign out</Button>
         </div>

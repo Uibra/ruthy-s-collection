@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { supabase } from "@/integrations/supabase/client";
+
 export const defaultShop = {
   name: "Ruthys Collection",
   tagline: "Modern essentials, curated for everyday style",
@@ -23,6 +25,15 @@ export const defaultShop = {
 const STORAGE_KEY = "shop-settings-v1";
 const listeners = new Set<(settings: typeof defaultShop) => void>();
 
+function mergeShopSettings(base: typeof defaultShop, incoming?: Partial<typeof defaultShop>): typeof defaultShop {
+  return {
+    ...base,
+    ...incoming,
+    socials: { ...base.socials, ...(incoming?.socials ?? {}) },
+    delivery: { ...base.delivery, ...(incoming?.delivery ?? {}) },
+  };
+}
+
 export function getStoredShopSettings() {
   if (typeof window === "undefined") return {};
   try {
@@ -34,14 +45,35 @@ export function getStoredShopSettings() {
 }
 
 export function readShopSettings() {
-  const stored = getStoredShopSettings();
-  const merged = {
-    ...defaultShop,
-    ...stored,
-    socials: { ...defaultShop.socials, ...(stored?.socials ?? {}) },
-    delivery: { ...defaultShop.delivery, ...(stored?.delivery ?? {}) },
-  };
-  return merged;
+  return mergeShopSettings(defaultShop, getStoredShopSettings());
+}
+
+export async function fetchShopSettingsFromSupabase() {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const { data, error } = await supabase.from("shop_settings").select("settings").eq("id", "default").maybeSingle();
+    if (error || !data?.settings) return null;
+    return mergeShopSettings(defaultShop, data.settings as Partial<typeof defaultShop>);
+  } catch {
+    return null;
+  }
+}
+
+export async function saveShopSettingsToSupabase(settings: typeof defaultShop) {
+  if (typeof window === "undefined") return false;
+
+  try {
+    const { error } = await supabase.from("shop_settings").upsert({ id: "default", settings }, { onConflict: "id" });
+    if (error) {
+      console.warn("Could not save shop settings to Supabase:", error.message);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.warn("Could not save shop settings to Supabase:", error);
+    return false;
+  }
 }
 
 export function subscribeToShopSettings(listener: (settings: typeof defaultShop) => void) {
@@ -62,12 +94,7 @@ function notifyShopSettingsChanged(next: typeof defaultShop) {
 
 export function updateShopSettings(partial: Partial<typeof defaultShop>) {
   const current = readShopSettings();
-  const next = {
-    ...current,
-    ...partial,
-    socials: { ...current.socials, ...partial.socials },
-    delivery: { ...current.delivery, ...partial.delivery },
-  };
+  const next = mergeShopSettings(current, partial);
   shop = next;
 
   if (typeof window !== "undefined") {
@@ -79,6 +106,7 @@ export function updateShopSettings(partial: Partial<typeof defaultShop>) {
     }
   }
 
+  void saveShopSettingsToSupabase(next);
   notifyShopSettingsChanged(next);
   return shop;
 }
@@ -87,7 +115,31 @@ export function useShopSettings() {
   const [settings, setSettings] = useState<typeof defaultShop>(() => readShopSettings());
 
   useEffect(() => {
-    const syncFromStorage = () => setSettings(readShopSettings());
+    let active = true;
+
+    const syncFromStorage = () => {
+      if (!active) return;
+      setSettings(readShopSettings());
+    };
+
+    const syncFromRemote = async () => {
+      const remote = await fetchShopSettingsFromSupabase();
+      if (!active) return;
+      if (remote) {
+        setSettings(remote);
+        shop = remote;
+        if (typeof window !== "undefined") {
+          try {
+            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(remote));
+          } catch {
+            // Ignore local fallback errors.
+          }
+        }
+      } else {
+        syncFromStorage();
+      }
+    };
+
     const onStorage = (event: StorageEvent) => {
       if (!event.key || event.key === STORAGE_KEY) syncFromStorage();
     };
@@ -104,9 +156,10 @@ export function useShopSettings() {
       window.addEventListener("shop-settings-updated", onCustom);
     }
 
-    syncFromStorage();
+    void syncFromRemote();
 
     return () => {
+      active = false;
       unsubscribe();
       if (typeof window !== "undefined") {
         window.removeEventListener("storage", onStorage);

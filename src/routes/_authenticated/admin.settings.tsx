@@ -49,9 +49,9 @@ function StoreSettingsPage() {
     setForm({ ...shop, socials: { ...shop.socials }, delivery: { ...shop.delivery } });
   }, [shop]);
 
-  function save() {
+  async function save() {
     updateShopSettings(form as any);
-    setSaved("Store settings saved locally");
+    setSaved("Store settings saved and live on the storefront");
   }
 
   async function updateAccount() {

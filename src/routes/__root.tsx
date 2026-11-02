@@ -132,19 +132,19 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith("/admin") || location.pathname.startsWith("/auth");
+  const hideSiteChrome = location.pathname.startsWith("/auth") || location.pathname.startsWith("/admin");
 
   return (
     <QueryClientProvider client={queryClient}>
       <StoreProvider>
-        {!isAdminRoute && <AnnouncementBar />}
-        {!isAdminRoute && <Header />}
+        {!hideSiteChrome && <AnnouncementBar />}
+        {!hideSiteChrome && <Header />}
         <main className="min-h-[60vh]">
           {/* Required: nested routes render here. */}
           <Outlet />
         </main>
-        {!isAdminRoute && <Footer />}
-        {!isAdminRoute && <WhatsAppButton />}
+        {!hideSiteChrome && <Footer />}
+        {!hideSiteChrome && <WhatsAppButton />}
         <Toaster />
       </StoreProvider>
     </QueryClientProvider>

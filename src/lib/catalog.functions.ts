@@ -101,6 +101,14 @@ export const checkAdmin = createServerFn({ method: "POST" })
     return { isAdmin: await ensureAdminAccess(context.supabase as never, context.userId) };
   });
 
+export const claimOwnerAdmin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase.rpc("claim_first_admin");
+    if (error) throw new Error("Could not claim admin access");
+    return { ok: Boolean(data) };
+  });
+
 async function assertAdmin(supabase: { rpc: (fn: "has_role" | "claim_first_admin", args?: { _user_id?: string; _role?: "admin" }) => PromiseLike<{ data: unknown }> }, userId: string) {
   if (!(await ensureAdminAccess(supabase, userId))) throw new Error("Admins only");
 }
@@ -128,6 +136,7 @@ export const saveProduct = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .validator((d) => productInput.parse(d))
   .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await assertAdmin(context.supabase as never, context.userId);
     const row = {
       slug: data.slug,
@@ -148,10 +157,10 @@ export const saveProduct = createServerFn({ method: "POST" })
       updated_at: new Date().toISOString(),
     };
     const q = data.id
-      ? context.supabase.from("products").update(row).eq("id", data.id).select("id").single()
-      : context.supabase.from("products").insert(row).select("id").single();
+      ? supabaseAdmin.from("products").update(row).eq("id", data.id).select("id").single()
+      : supabaseAdmin.from("products").insert(row).select("id").single();
     const { data: saved, error } = await q;
-    if (error) throw new Error(error.code === "23505" ? "Another product already uses that web address" : "Could not save product");
+    if (error) throw new Error(error.code === "23505" ? "Another product already uses that web address" : `Could not save product: ${error.message}`);
     return { id: saved.id };
   });
 
@@ -159,9 +168,10 @@ export const deleteProduct = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .validator((d) => z.object({ id: z.string() }).parse(d))
   .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await assertAdmin(context.supabase as never, context.userId);
-    const { error } = await context.supabase.from("products").delete().eq("id", data.id);
-    if (error) throw new Error("Could not delete product");
+    const { error } = await supabaseAdmin.from("products").delete().eq("id", data.id);
+    if (error) throw new Error(`Could not delete product: ${error.message}`);
     return { ok: true };
   });
 

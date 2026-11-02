@@ -146,6 +146,24 @@ export type Database = {
         }
         Relationships: []
       }
+      shop_settings: {
+        Row: {
+          id: string
+          settings: Json
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          settings?: Json
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          settings?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -178,6 +196,16 @@ export type Database = {
         Returns: boolean
       }
       signup_open: { Args: never; Returns: boolean }
+      upsert_shop_settings: {
+        Args: {
+          p_settings: Json
+        }
+        Returns: {
+          id: string
+          settings: Json
+          updated_at: string
+        }
+      }
     }
     Enums: {
       app_role: "admin" | "user"
