@@ -4,16 +4,16 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const defaultShop = {
   name: "Ruthys Collection",
-  tagline: "Modern essentials, curated for everyday style",
-  phoneLocal: "+234 800 000 0000",
-  whatsappNumber: "2348000000000",
-  email: "hello@pixelperfectmatch.com",
-  location: "Lagos, Nigeria",
+  tagline: "Luxury essentials for everyday confidence",
+  phoneLocal: "+234 803 000 0000",
+  whatsappNumber: "2348030000000",
+  email: "hello@ruthyscollection.com",
+  location: "Kano, Nigeria",
   hours: "Mon – Sat, 9:00am – 7:00pm",
   socials: {
-    instagram: "https://instagram.com/pixelperfectmatch",
-    facebook: "https://facebook.com/pixelperfectmatch",
-    tiktok: "https://tiktok.com/@pixelperfectmatch",
+    instagram: "https://instagram.com/ruthyscollection",
+    facebook: "https://facebook.com/ruthyscollection",
+    tiktok: "https://tiktok.com/@ruthyscollection",
   },
   delivery: {
     homeFee: 2000,

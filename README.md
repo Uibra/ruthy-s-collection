@@ -1,48 +1,71 @@
 # Ruthys Collection
 
-Custom storefront and commerce app for Ruthys Collection.
+A boutique commerce storefront for Ruthys Collection, built to showcase premium perfumes, jewellery, accessories, waist beads, scarves and bags from Kano, Nigeria.
 
-This project was originally generated from a Lovable starter, but it is now being adapted as a custom-owned codebase for the business.
+This project is a custom-owned storefront and admin workflow for a real retail brand. It combines a luxury storefront, product catalog, WhatsApp ordering flow and a private owner dashboard for managing the collection.
 
 ## Tech stack
 
 - Vite + React + TypeScript
-- TanStack Router / Start
-- Supabase for auth and database
-- AI gateway integration for storefront features
-- Tailwind CSS and shadcn/ui styling
+- TanStack Router and TanStack Start
+- Supabase for auth, storage and database
+- AI-powered product assistant and catalog tools
+- Tailwind CSS with shadcn/ui styling
 
-## Development
+## Business profile
 
-You need Node.js 22 and npm.
+- Brand: Ruthys Collection
+- Founder: Ruth Friday
+- Location: Kano, Nigeria
+- Delivery: Nationwide shipping with home delivery fees and free delivery over threshold
+- Ordering: WhatsApp-first flow with direct customer messaging
+- Payment: Customer-facing storefront with real checkout and admin workflows
+
+## Local setup
+
+Requirements: Node.js 22 and npm.
 
 ```sh
-git clone <your-github-repo-url>
-cd pixel-perfect-match
+git clone https://github.com/Uibra/ruthy-s-collection.git
+cd ruthy-s-collection
 npm install
 npm run dev -- --host 0.0.0.0
 ```
 
-## Environment
+## Environment setup
 
-Set up your local environment variables required by Supabase and AI features before running the app.
-
-## Owner setup and first real products
-
-1. Create the first owner account from the app at `/auth`.
-2. Sign in and open `/admin`.
-3. Add the real products you want to sell from the admin product screen.
-4. If you want to seed the first catalogue immediately, run:
+Create a local environment file with your project secrets before running the app.
 
 ```sh
 cp .env.example .env.local
-# add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to .env.local
+```
+
+Add the needed values for:
+
+- Supabase URL and anon/service keys
+- AI gateway configuration for the storefront assistant
+- Any deployment-specific environment values required by the app
+
+## Admin onboarding
+
+1. Create the first owner account from the app at `/auth`.
+2. Sign in and open `/admin`.
+3. Add or refine the catalogue in the admin screen.
+4. Keep shop settings aligned with the business profile in the storefront.
+
+## Product seeding
+
+If you want to load an initial real catalogue quickly:
+
+```sh
 npm run seed:products
 ```
 
-The seed script uses the service role key to insert live product rows into Supabase and upserts by `slug`, so rerunning it safely refreshes the same catalogue.
+The seed script uses the service role key to insert the collection into Supabase and upserts by `slug`, so rerunning it safely refreshes the same catalogue.
 
-## Notes
+## Production notes
 
-This repository is your custom project. Keep your own branding, database, and deployment configuration aligned with your business rather than the Lovable-generated template.
-# ruthy-s-collection
+- Keep the storefront data in sync with the live business profile
+- Do not reopen public sign-up beyond the first owner setup
+- Keep all private credentials in local `.env` files and never commit them
+- Treat this repo as the working codebase for the real boutique brand

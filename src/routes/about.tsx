@@ -48,12 +48,16 @@ function About() {
           </h1>
           <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted-foreground">
             <p>
-              {shop.name} was founded by Ruth Friday with one simple idea: every woman deserves beautiful, quality
-              pieces without the stress of guessing what's real.
+              {shop.name} started in Kano with a simple mission: help women feel confident, polished and beautiful
+              without the stress of searching endlessly for the right pieces.
             </p>
             <p>
-              From long-lasting perfumes to gold-tone chains, handmade waist beads, vintage scarves and
-              structured bags, each item is chosen personally — the kind of thing Ruth would wear herself.
+              From long-lasting perfumes and gold-tone chains to handmade waist beads, vintage scarves and structured
+              bags, each item is selected with intention — the kind of pieces Ruth would reach for herself.
+            </p>
+            <p>
+              We believe shopping should feel personal, uplifting and easy. That is why our customers get honest
+              recommendations, thoughtful packaging and a genuine boutique experience from first message to final delivery.
             </p>
           </div>
           <blockquote className="mt-8 border-l-2 border-gold pl-5 font-display text-2xl italic leading-snug">

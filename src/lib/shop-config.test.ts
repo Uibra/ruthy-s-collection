@@ -61,3 +61,13 @@ test("shop settings update is reflected in WhatsApp links", () => {
     globalThis.window = originalWindow;
   }
 });
+
+test("default store profile uses the Ruthys Collection brand details", () => {
+  const settings = readShopSettings();
+
+  assert.equal(settings.name, "Ruthys Collection");
+  assert.equal(settings.location, "Kano, Nigeria");
+  assert.equal(settings.email, "hello@ruthyscollection.com");
+  assert.match(settings.socials.instagram, /ruthyscollection/i);
+  assert.match(settings.socials.tiktok, /ruthyscollection/i);
+});
