@@ -48,8 +48,23 @@ export function readShopSettings() {
   return mergeShopSettings(defaultShop, getStoredShopSettings());
 }
 
+function hasSupabaseConfig() {
+  const viteUrl = typeof import.meta !== "undefined" ? import.meta.env?.VITE_SUPABASE_URL : undefined;
+  const viteKey = typeof import.meta !== "undefined" ? import.meta.env?.VITE_SUPABASE_ANON_KEY : undefined;
+  const vitePublishableKey = typeof import.meta !== "undefined" ? import.meta.env?.VITE_SUPABASE_PUBLISHABLE_KEY : undefined;
+
+  return Boolean(
+    viteUrl ||
+      viteKey ||
+      vitePublishableKey ||
+      process.env.SUPABASE_URL ||
+      process.env.SUPABASE_ANON_KEY ||
+      process.env.SUPABASE_PUBLISHABLE_KEY,
+  );
+}
+
 export async function fetchShopSettingsFromSupabase() {
-  if (typeof window === "undefined") return null;
+  if (typeof window === "undefined" || !hasSupabaseConfig()) return null;
 
   try {
     const { data, error } = await supabase.from("shop_settings").select("settings").eq("id", "default").maybeSingle();
@@ -61,14 +76,25 @@ export async function fetchShopSettingsFromSupabase() {
 }
 
 export async function saveShopSettingsToSupabase(settings: typeof defaultShop) {
-  if (typeof window === "undefined") return false;
+  if (typeof window === "undefined" || !hasSupabaseConfig()) return false;
+
+  const next = mergeShopSettings(defaultShop, settings);
+  if (typeof window !== "undefined") {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    } catch {
+      // Ignore storage fallback issues; the site still keeps the in-memory state.
+    }
+  }
 
   try {
-    const { error } = await supabase.from("shop_settings").upsert({ id: "default", settings }, { onConflict: "id" });
+    const { error } = await supabase.from("shop_settings").upsert({ id: "default", settings: next }, { onConflict: "id" });
     if (error) {
       console.warn("Could not save shop settings to Supabase:", error.message);
       return false;
     }
+    shop = next;
+    notifyShopSettingsChanged(next);
     return true;
   } catch (error) {
     console.warn("Could not save shop settings to Supabase:", error);

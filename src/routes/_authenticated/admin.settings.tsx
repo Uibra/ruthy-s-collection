@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
-import { updateShopSettings, useShopSettings } from "@/lib/shop-config";
+import { saveShopSettingsToSupabase, updateShopSettings, useShopSettings } from "@/lib/shop-config";
 
 export const Route = createFileRoute("/_authenticated/admin/settings")({
   component: StoreSettingsPage,
@@ -50,8 +50,14 @@ function StoreSettingsPage() {
   }, [shop]);
 
   async function save() {
-    updateShopSettings(form as any);
-    setSaved("Store settings saved and live on the storefront");
+    const next = { ...form, socials: { ...form.socials }, delivery: { ...form.delivery } };
+    updateShopSettings(next as any);
+    const savedToRemote = await saveShopSettingsToSupabase(next as any);
+    setSaved(
+      savedToRemote
+        ? "Store settings saved and live on the storefront"
+        : "Saved locally for this browser, but Supabase is not configured yet",
+    );
   }
 
   async function updateAccount() {
